@@ -1,8 +1,5 @@
 name: chenxi_assistant
-description: "晨曦——陈明盷的个人智能机器人。支持语音对话、多端互联（实体机器人/手机/车机）、智能家居控制、记忆学习与人脸声纹识别，基于小智开源项目打造。"
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-name: ai_assistant
-description: "A new Flutter project."
+description: "晨曦——陈明磊的个人智能机器人。支持语音对话、多端互联（实体机器人/手机/车机）、智能家居控制、记忆学习与人脸声纹识别，基于小智开源项目打造。"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
