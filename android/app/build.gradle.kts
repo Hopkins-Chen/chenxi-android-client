@@ -25,7 +25,8 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = flutter.targetSdkVersion
+        // 固定 targetSdk=33：兼容鸿蒙4.x/Android13+，避免 targetSdk 35 的权限与兼容问题
+        targetSdk = 33
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
