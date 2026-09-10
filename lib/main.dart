@@ -24,34 +24,50 @@ const bool enableDebugTools = true;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 设置全局沉浸式导航栏
-  await _setupSystemUI();
+  // 设置全局沉浸式导航栏（加固：异常不影响启动）
+  try {
+    await _setupSystemUI();
+  } catch (e) {
+    print('设置系统UI失败(忽略): $e');
+  }
 
   // 设置状态栏颜色变化监听器，确保状态栏样式始终如一
   SystemChannels.lifecycle.setMessageHandler((msg) async {
     if (msg == AppLifecycleState.resumed.toString()) {
       // 应用回到前台时重新应用系统UI设置
-      await _setupSystemUI();
+      try {
+        await _setupSystemUI();
+      } catch (e) {
+        print('恢复系统UI失败(忽略): $e');
+      }
     }
     return null;
   });
 
-  // 设置高性能渲染
+  // 设置高性能渲染（加固：异常不影响启动）
   if (Platform.isAndroid || Platform.isIOS) {
-    // 启用SkSL预热，提高首次渲染性能
-    await Future.delayed(const Duration(milliseconds: 50));
-    PaintingBinding.instance.imageCache.maximumSize = 1000;
-    // 增加图像缓存容量
-    PaintingBinding.instance.imageCache.maximumSizeBytes =
-        100 * 1024 * 1024; // 100 MB
+    try {
+      // 启用SkSL预热，提高首次渲染性能
+      await Future.delayed(const Duration(milliseconds: 50));
+      PaintingBinding.instance.imageCache.maximumSize = 1000;
+      // 增加图像缓存容量
+      PaintingBinding.instance.imageCache.maximumSizeBytes =
+          100 * 1024 * 1024; // 100 MB
+    } catch (e) {
+      print('渲染缓存设置失败(忽略): $e');
+    }
   }
 
-  // 请求录音和存储权限
-  await [
-    Permission.microphone,
-    Permission.storage,
-    if (Platform.isAndroid) Permission.bluetoothConnect,
-  ].request();
+  // 请求录音权限（加固：鸿蒙/Android13+ 兼容，移除已废弃的存储权限，失败不阻止启动）
+  try {
+    final perms = <Permission>[
+      Permission.microphone,
+      if (Platform.isAndroid) Permission.bluetoothConnect,
+    ];
+    await perms.request();
+  } catch (e) {
+    print('权限请求异常(忽略，不影响启动): $e');
+  }
 
   // 添加中文本地化支持
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
